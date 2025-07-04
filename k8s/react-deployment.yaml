@@ -48,8 +48,6 @@ spec:
   ports:
     - port: 80               #porta dentro do container
       protocol: TCP          #protocolo
-      targetPort: 80       #porta do container
-      nodePort: 30080        #porta no host(mapeada)
   # Seletor para conectar com os pods corretos
   selector:
     app: reactapp #conecta com os pods
