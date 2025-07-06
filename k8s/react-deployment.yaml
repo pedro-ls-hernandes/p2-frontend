@@ -39,15 +39,16 @@ kind: Service
 # Metadados do Service
 metadata:
   # Nome do service
-  name: load-balancer
+  name: reactapp
 # Especificações do Service
 spec:
-  # Tipo NodePort para expor externamente com porta específica
-  type: LoadBalancer
   # Configuração das portas
   ports:
-    - port: 80               #porta dentro do container
-      protocol: TCP          #protocolo
+    - protocol: TCP                #protocolo
+      port: 80                     #porta dentro do container
+      targetPort: 80               #porta do container
+      nodePort: 30087              #porta externa do cluster
+  type: NodePort  # Tipo de serviço para expor a aplicação
   # Seletor para conectar com os pods corretos
   selector:
     app: reactapp #conecta com os pods
