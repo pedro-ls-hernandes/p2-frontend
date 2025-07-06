@@ -5,9 +5,6 @@ kind: Deployment
 metadata:
   # Nome do deployment no namespace
   name: react-deploy
-  # Labels para identificar e organizar o recurso
-  labels:
-    app: reactapp
 # Especificações do Deployment
 spec:
   # Número de pods que devem estar rodando
@@ -26,12 +23,16 @@ spec:
     spec:
       # Lista de containers que rodarão no pod
       containers:
-        - name: reactapp # nome do container
+        - name: reactapp-container # nome do container
           # Imagem customizada criada no Docker Hub
           image: pedrolshernandes/frontend-p2:latest #meuusergithub/repositorio:tag
           # Portas expostas pelo container
           ports:
             - containerPort: 80
+          # Variáveis de ambiente para configuração do container
+          env:
+            - name: REACT_APP_API_URL
+              value: "http://localhost:3000" # URL da API que o frontend irá consumir
 ---
 # Service para expor a aplicação Node.js para fora do cluster
 apiVersion: v1
@@ -39,16 +40,16 @@ kind: Service
 # Metadados do Service
 metadata:
   # Nome do service
-  name: reactapp
+  name: reactapp-service
 # Especificações do Service
 spec:
+  type: NodePort  # Tipo de serviço para expor a aplicação
   # Configuração das portas
+  # Seletor para conectar com os pods corretos
+  selector:
+    app: reactapp #conecta com os pods
   ports:
     - protocol: TCP                #protocolo
       port: 80                     #porta dentro do container
       targetPort: 80               #porta do container
-      nodePort: 30087              #porta externa do cluster
-  type: NodePort  # Tipo de serviço para expor a aplicação
-  # Seletor para conectar com os pods corretos
-  selector:
-    app: reactapp #conecta com os pods
+      nodePort: 30091              #porta externa do cluster
